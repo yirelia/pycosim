@@ -1,0 +1,7 @@
+# .gitignore 配置
+.claude
+.pytest_cache
+需求文档.md
+proxy.sh
+
+__pycache__

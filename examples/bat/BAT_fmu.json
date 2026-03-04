@@ -1,0 +1,67 @@
+{
+  "settings": {
+    "start_time": 0.0,
+    "stop_time": 10.0,
+    "co_initialization": {
+      "residuals_tolerance": 1e-5,
+      "max_iterations": 100
+    },
+    "stepper": {
+      "method": "constant",
+      "step_size": 0.1
+    }
+  },
+  "nodes": [
+    {
+      "type": "fmu",
+      "id": "BAT_5",
+      "path": "/Users/yangrui/github/pycosim/examples/bat/fmus/BAT_5.fmu",
+      "inputs": [
+        {
+          "id": "u_in",
+          "type": "Real"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "T_Battery",
+          "type": "Real"
+        }
+      ]
+    },
+    {
+      "type": "fmu",
+      "id": "BAT_Ctrl",
+      "path": "/Users/yangrui/github/pycosim/examples/bat/fmus/BAT_Ctrl.fmu",
+      "inputs": [
+        {
+          "id": "T_battery",
+          "type": "Real"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "u_in",
+          "type": "Real"
+        }
+      ]
+    }
+  ],
+  "arrows": [
+    {
+      "from": "BAT_5.T_Battery",
+      "to": "BAT_Ctrl.T_battery"
+    },
+    {
+      "from": "BAT_Ctrl.u_in",
+      "to": "BAT_5.u_in"
+    }
+  ],
+  "export": {
+    "folder": "./output",
+    "prefix": "BAT_results",
+    "variables": [
+      "all"
+    ]
+  }
+}

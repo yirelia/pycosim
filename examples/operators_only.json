@@ -1,0 +1,40 @@
+{
+  "settings": {
+    "start_time": 0.0,
+    "stop_time": 1.0,
+    "stepper": {
+      "method": "constant",
+      "step_size": 0.1
+    }
+  },
+  "nodes": [
+    {
+      "type": "external_input",
+      "id": "Signal",
+      "outputs": [{"id": "value", "type": "Real"}]
+    },
+    {
+      "type": "operator",
+      "operator_type": "gain",
+      "id": "Gain1",
+      "value": 2.5,
+      "inputs": [{"id": "input", "type": "Real"}]
+    },
+    {
+      "type": "operator",
+      "operator_type": "offset",
+      "id": "Offset1",
+      "value": 10.0,
+      "inputs": [{"id": "input", "type": "Real"}]
+    }
+  ],
+  "arrows": [
+    {"from": "Signal.value", "to": "Gain1.input"},
+    {"from": "Gain1.output", "to": "Offset1.input"}
+  ],
+  "export": {
+    "folder": "./output",
+    "prefix": "operators_test",
+    "variables": ["all"]
+  }
+}

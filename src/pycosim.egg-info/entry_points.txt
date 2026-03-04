@@ -1,0 +1,2 @@
+[console_scripts]
+pycosim = pycosim.cli:main

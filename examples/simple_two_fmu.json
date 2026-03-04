@@ -1,0 +1,35 @@
+{
+  "settings": {
+    "start_time": 0.0,
+    "stop_time": 10.0,
+    "stepper": {
+      "method": "constant",
+      "step_size": 0.1
+    }
+  },
+  "nodes": [
+    {
+      "type": "fmu",
+      "id": "Plant",
+      "path": "./fmus/plant.fmu",
+      "inputs": [{"id": "u", "type": "Real"}],
+      "outputs": [{"id": "y", "type": "Real"}]
+    },
+    {
+      "type": "fmu",
+      "id": "Controller",
+      "path": "./fmus/controller.fmu",
+      "inputs": [{"id": "u", "type": "Real"}],
+      "outputs": [{"id": "y", "type": "Real"}]
+    }
+  ],
+  "arrows": [
+    {"from": "Plant.y", "to": "Controller.u"},
+    {"from": "Controller.y", "to": "Plant.u"}
+  ],
+  "export": {
+    "folder": "./output",
+    "prefix": "results",
+    "variables": ["all"]
+  }
+}

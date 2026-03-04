@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycosim"
+version = "0.1.0"
+description = "Multi-FMU Co-Simulation Engine for Python"
+requires-python = ">=3.10"
+dependencies = [
+    "fmpy>=0.3.0",
+    "numpy>=1.24",
+    "pyzmq>=25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.scripts]
+pycosim = "pycosim.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
