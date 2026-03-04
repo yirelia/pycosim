@@ -3,5 +3,5 @@
 .pytest_cache
 需求文档.md
 proxy.sh
-
+.DS_Store
 __pycache__
