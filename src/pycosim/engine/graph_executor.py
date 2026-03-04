@@ -117,6 +117,7 @@ class GraphExecutor:
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.debug("t=%.6f, dt=%.6f", current_time, dt)
         finally:
+            iterator.log_summary()
             exporter.close()
 
     def _phase_terminate(self) -> None:
