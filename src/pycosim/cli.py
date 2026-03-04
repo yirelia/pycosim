@@ -24,6 +24,19 @@ def main(argv: list[str] | None = None) -> None:
     sim_parser.add_argument("-v", "--verbose", action="count", default=0,
                             help="Increase verbosity (-v, -vv)")
 
+    # --- plot ---
+    plot_parser = subparsers.add_parser("plot", help="Plot simulation results")
+    plot_parser.add_argument("csv", help="Path to CSV results file")
+    plot_parser.add_argument("--vars", nargs="+", default=None,
+                             help="Variables to plot (default: all)")
+    plot_parser.add_argument("--output", "-o", default=None,
+                             help="Save figure to file instead of showing")
+    plot_parser.add_argument("--title", default=None, help="Figure title")
+    plot_parser.add_argument("--subplots", action="store_true",
+                             help="Each variable in its own subplot")
+    plot_parser.add_argument("--list", action="store_true", dest="list_vars",
+                             help="List available variables and exit")
+
     # --- worker ---
     worker_parser = subparsers.add_parser("worker", help="Start a distributed worker")
     worker_parser.add_argument("--address", default="tcp://localhost:5555",
@@ -49,6 +62,8 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.command == "simulate":
         _cmd_simulate(args)
+    elif args.command == "plot":
+        _cmd_plot(args)
     elif args.command == "worker":
         _cmd_worker(args)
 
@@ -61,6 +76,25 @@ def _cmd_simulate(args) -> None:
     executor = GraphExecutor(graph, parallel=args.parallel,
                              max_workers=args.workers)
     executor.execute()
+
+
+def _cmd_plot(args) -> None:
+    from pycosim.engine.visualizer import list_variables, plot
+
+    if args.list_vars:
+        variables = list_variables(args.csv)
+        print("Available variables:")
+        for v in variables:
+            print(f"  {v}")
+        return
+
+    plot(
+        csv_path=args.csv,
+        variables=args.vars,
+        output=args.output,
+        title=args.title,
+        subplots=args.subplots,
+    )
 
 
 def _cmd_worker(args) -> None:
