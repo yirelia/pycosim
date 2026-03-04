@@ -94,13 +94,46 @@ class FMULocal(GraphNode, FMUProxy):
         self._fmu.exitInitializationMode()
 
     def _step(self, current_time: float, dt: float) -> bool:
-        self.push_inputs()
-        status = self._fmu.doStep(
-            currentCommunicationPoint=current_time,
-            communicationStepSize=dt,
-        )
-        self.pull_outputs()
-        return status == 0
+        try:
+            self.push_inputs()
+            status = self._fmu.doStep(
+                currentCommunicationPoint=current_time,
+                communicationStepSize=dt,
+            )
+            logger.debug("FMU status is '%s'", status)
+        except Exception as e:
+            logger.exception("FMU '%s' step raised exception at t=%f dt=%f: %s",
+                             self.node_id, current_time, dt, e)
+            return False
+
+        try:
+            self.pull_outputs()
+        except Exception as e:
+            # Pulling outputs failed — log and treat as step failure
+            logger.exception("FMU '%s' failed to pull outputs at t=%f dt=%f: %s",
+                             self.node_id, current_time, dt, e)
+            return False
+
+        # Robustly interpret doStep return values:
+        # - fmpy.FMU2Slave.doStep commonly returns None on success
+        # - Some FMUs or wrappers may return bool or int
+
+        if status is None:
+            success = True
+        elif isinstance(status, bool):
+            success = status
+        elif isinstance(status, int):
+            success = (status == 0)
+        else:
+            logger.debug("FMU '%s' doStep returned unexpected status type %s: %r",
+                         self.node_id, type(status).__name__, status)
+            success = True
+
+        if not success:
+            logger.error("FMU '%s' doStep returned non-success status %r at t=%f dt=%f",
+                         self.node_id, status, current_time, dt)
+
+        return success
 
     def _terminate(self) -> None:
         if self._fmu is not None:

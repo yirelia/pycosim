@@ -1,21 +1,21 @@
 {
   "settings": {
     "start_time": 0.0,
-    "stop_time": 10.0,
+    "stop_time": 250,
     "co_initialization": {
       "residuals_tolerance": 1e-5,
       "max_iterations": 100
     },
     "stepper": {
       "method": "constant",
-      "step_size": 0.1
+      "step_size": 0.01
     }
   },
   "nodes": [
     {
       "type": "fmu",
       "id": "BAT_5",
-      "path": "/Users/yangrui/github/pycosim/examples/bat/fmus/BAT_5.fmu",
+      "path": "D:\\github-repo\\pycosim\\examples\\bat\\fmus\\BAT_5.fmu",
       "inputs": [
         {
           "id": "u_in",
@@ -32,7 +32,7 @@
     {
       "type": "fmu",
       "id": "BAT_Ctrl",
-      "path": "/Users/yangrui/github/pycosim/examples/bat/fmus/BAT_Ctrl.fmu",
+      "path": "D:\\github-repo\\pycosim\\examples\\bat\\fmus\\BAT_Ctrl.fmu",
       "inputs": [
         {
           "id": "T_battery",
